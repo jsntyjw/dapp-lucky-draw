@@ -2,7 +2,7 @@
 
 import { useState, ChangeEvent, FormEvent, useEffect } from "react";
 
-export default function LuckyDrawSetup() {
+const LuckyDraw: React.FC = () => {
   const [step, setStep] = useState(1);
   const [numPrizes, setNumPrizes] = useState(1);
   const [prizes, setPrizes] = useState([{ name: "", description: "" }]);
@@ -309,18 +309,13 @@ export default function LuckyDrawSetup() {
   };
 
   return (
-    <div className="bg-slate-400 flex flex-col justify-start w-full h-screen">
-      <div className="container mx-auto p-4 bg-gray-50 flex-grow flex flex-col items-center">
-        <h1 className="text-2xl font-bold mb-6 text-gray-700">
-          Lucky Draw Campaign Setup
-        </h1>
-        <form
-          onSubmit={(e) => e.preventDefault()}
-          className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 w-full max-w-xl"
-        >
-          {renderStepContent()}
-        </form>
-      </div>
-    </div>
+    <form
+      onSubmit={(e) => e.preventDefault()}
+      className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 w-full max-w-xl"
+    >
+      {renderStepContent()}
+    </form>
   );
-}
+};
+
+export default LuckyDraw;
