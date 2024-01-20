@@ -8,19 +8,19 @@ const WalletCard: React.FC = () => {
       <div className="w-full grid grid-cols-3 gap-4">
         {/* Div 1 */}
         <div className="flex flex-col items-center justify-center space-y-2">
-        <Button color="primary" variant="solid">Button 1</Button>
+        <Button radius="md" className="bg-lime-500 text-white shadow-lg">Button 1</Button>
           <Input fullWidth color="success" placeholder="Enter text 1" />
         </div>
 
         {/* Div 2 */}
         <div className="flex flex-col items-center justify-center space-y-2">
-          <Button color="success">Button 2</Button>
+        <Button radius="md" className="bg-lime-500 text-white shadow-lg">Button 1</Button>
           <Input fullWidth color="success" placeholder="Enter text 2" />
         </div>
 
         {/* Div 3 */}
         <div className="flex flex-col items-center justify-center space-y-2">
-          <Button color="success">Button 3</Button>
+        <Button radius="md" className="bg-lime-500 text-white shadow-lg">Button 1</Button>
           <Input fullWidth color="success" placeholder="Enter text 3" />
         </div>
       </div>
