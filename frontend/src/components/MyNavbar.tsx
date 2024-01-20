@@ -1,52 +1,17 @@
-import Link from "next/link";
+import { Avatar, Button } from "@nextui-org/react";
 
-import {
-  Navbar,
-  NavbarBrand,
-  NavbarContent,
-  NavbarItem,
-  NavbarMenuToggle,
-  NavbarMenu,
-  NavbarMenuItem,
-  Button,
-  Avatar,
-} from "@nextui-org/react";
-
-const MyNavbar: React.FC = () => {
+const Navbar: React.FC = () => {
   return (
-    <Navbar style={{ color: 'white' }}>
-      <NavbarBrand>
-      <Avatar name="Joe"/>
-      </NavbarBrand>
-      <NavbarContent className="hidden sm:flex gap-4" justify="center">
-        <NavbarItem>
-          <Link color="foreground" href="#">
-            Features
-          </Link>
-        </NavbarItem>
-        <NavbarItem isActive>
-          <Link href="#" aria-current="page">
-            Customers
-          </Link>
-        </NavbarItem>
-        <NavbarItem>
-          <Link color="foreground" href="#">
-            Integrations
-          </Link>
-        </NavbarItem>
-      </NavbarContent>
-      <NavbarContent justify="end">
-        <NavbarItem className="hidden lg:flex">
-          <Link href="#">Login</Link>
-        </NavbarItem>
-        <NavbarItem>
-          <Button as={Link} color="primary" href="#" variant="flat">
-            Sign Up
-          </Button>
-        </NavbarItem>
-      </NavbarContent>
-    </Navbar>
+    <nav className="text-white p-4 flex justify-between items-center">
+      <div className="flex items-center">
+        <Avatar src="https://i.pravatar.cc/150?u=a042581f4e29026024d" />
+      </div>
+
+      <Button className="bg-fuchsia-50 text-black border border-solid border-gray-300 rounded-full px-4 py-2">
+        Login
+      </Button>
+    </nav>
   );
 };
 
-export default MyNavbar;
+export default Navbar;
