@@ -12,13 +12,30 @@ import {
   Avatar,
 } from "@nextui-org/react";
 
+import { useRouter } from "next/router";
+
 const MyNavbar: React.FC = () => {
+  const router = useRouter();
+
+  const handleCreateLuckyDraw = () => {
+    router.push("/LuckyDrawNav");
+  };
+
   return (
-    <Navbar style={{ color: 'white' }}>
+    <Navbar style={{ color: "white" }}>
       <NavbarBrand>
-      <Avatar name="Joe"/>
+        <Avatar name="Joe" />
       </NavbarBrand>
       <NavbarContent className="hidden sm:flex gap-4" justify="center">
+        <NavbarItem>
+          <Button
+            onClick={handleCreateLuckyDraw}
+            color="primary"
+            variant="flat"
+          >
+            Create Lucky Draw
+          </Button>
+        </NavbarItem>
         <NavbarItem>
           <Link color="foreground" href="#">
             Features

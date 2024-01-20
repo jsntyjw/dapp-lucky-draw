@@ -12,9 +12,12 @@ const Home: NextPage = () => {
         style={{ width: "60%", height: "75%" }}
       >
         <div className="flex-none" style={{ height: "10%" }}>
-          {/* placeholder */}
+          <MyNavbar />
         </div>
-        <div className="bg-gradient-to-b from-lime-500 to-slate-500 flex-grow" style={{ height: "60%" }}>
+        <div
+          className="bg-gradient-to-b from-lime-500 to-slate-500 flex-grow"
+          style={{ height: "60%" }}
+        >
           <Banner />
         </div>
         <div className="flex-none" style={{ height: "30%" }}>
