@@ -10,7 +10,7 @@ const WalletCard: React.FC = () => {
         <div className="flex flex-col items-center justify-center space-y-2">
           <Button
             radius="md"
-            className="bg-lime-500 text-white shadow-lg text-xl px-6 py-3"
+            className="bg-button-dark-green text-white shadow-lg text-xl px-6 py-3"
           >
             Button 1
           </Button>
@@ -20,7 +20,7 @@ const WalletCard: React.FC = () => {
         <div className="flex flex-col items-center justify-center space-y-2">
           <Button
             radius="md"
-            className="bg-lime-500 text-white shadow-lg text-xl px-6 py-3"
+            className="bg-button-dark-green text-white shadow-lg text-xl px-6 py-3"
           >
             Button 2
           </Button>
@@ -30,7 +30,7 @@ const WalletCard: React.FC = () => {
         <div className="flex flex-col items-center justify-center space-y-2">
           <Button
             radius="md"
-            className="bg-lime-500 text-white shadow-lg text-xl px-6 py-3"
+            className="bg-button-dark-green text-white shadow-lg text-xl px-6 py-3"
           >
             Button 3
           </Button>
