@@ -4,35 +4,78 @@ import { useState } from "react";
 import Banner from "../components/Banner";
 import NewLuckyDraw from "@/components/NewLuckyDraw";
 import MyNavbar from "@/components/MyNavbar";
+import LuckyDrawCards from "@/components/LuckyDrawCards"; // Import the LuckyDrawCards component
 
 const Home: NextPage = () => {
   const [showNewLuckyDraw, setShowNewLuckyDraw] = useState(false);
-  const [userAddress, setUserAddress] = useState<string | null>(null); // State to store user's Ethereum address
+  const [userAddress] = useState<string | null>(null);
 
   const handleCreateLuckyDrawClick = () => {
     setShowNewLuckyDraw(true);
   };
 
-  // Pass the user's Ethereum address as a prop to MyNavbar
+  // Example card data with six items
+  const cardData = [
+    {
+      round_no: 1,
+      base_prize: 100,
+      participants: ["Address1", "Address2", "Address3"],
+      is_resolved: false,
+    },
+    {
+      round_no: 2,
+      base_prize: 200,
+      participants: ["Address4", "Address5", "Address6"],
+      is_resolved: true,
+    },
+    {
+      round_no: 3,
+      base_prize: 150,
+      participants: ["Address7", "Address8", "Address9"],
+      is_resolved: true,
+    },
+    {
+      round_no: 4,
+      base_prize: 300,
+      participants: ["Address10", "Address11", "Address12"],
+      is_resolved: true,
+    },
+    {
+      round_no: 5,
+      base_prize: 120,
+      participants: ["Address13", "Address14", "Address15"],
+      is_resolved: true,
+    },
+    {
+      round_no: 6,
+      base_prize: 250,
+      participants: ["Address16", "Address17", "Address18"],
+      is_resolved: true,
+    },
+    // Add more card data objects as needed
+  ];
+
   return (
     <div className="bg-slate-400 flex flex-col justify-center items-center w-full h-screen">
       <div className="bg-background-dark shadow-lg rounded-lg m-4 flex flex-col flex-grow">
         <div className="flex-none">
           <MyNavbar
             onCreateLuckyDrawClick={handleCreateLuckyDrawClick}
-            userAddress={userAddress} // Pass userAddress as a prop
+            userAddress={userAddress}
           />
         </div>
-        <div className="bg-background-dark from-mainframe-green to-mainframe-dark flex-grow">
+        <div className="bg-background-dark from-mainframe-green to-mainframe-dark">
           <Banner />
         </div>
       </div>
-      {/* Render NewLuckyDraw component based on showNewLuckyDraw state */}
       {showNewLuckyDraw && (
-        <NewLuckyDraw
-          onClose={() => setShowNewLuckyDraw(false)} // Pass a callback to handle closing
-        />
+        <NewLuckyDraw onClose={() => setShowNewLuckyDraw(false)} />
       )}
+      <div className="flex justify-between w-full p-4">
+        <div className="w-full">
+          <LuckyDrawCards cardData={cardData} />
+        </div>
+      </div>
     </div>
   );
 };
