@@ -1,25 +1,33 @@
 import type { NextPage } from "next";
-import MyNavbar from "../components/MyNavbar";
+import { useState } from "react";
+
 import Banner from "../components/Banner";
-import WalletCard from "../components/WalletCard";
-import { Avatar, AvatarGroup, AvatarIcon } from "@nextui-org/react";
-import LuckyDraw from "@/components/LuckyDrawNav";
+import NewLuckyDraw from "@/components/NewLuckyDraw";
+import MyNavbar from "@/components/MyNavbar";
 
 const Home: NextPage = () => {
+  const [showNewLuckyDraw, setShowNewLuckyDraw] = useState(false);
+
+  const handleCreateLuckyDrawClick = () => {
+    setShowNewLuckyDraw(true);
+  };
+
   return (
     <div className="bg-slate-400 flex flex-col justify-center items-center w-full h-screen">
       <div className="bg-background-dark shadow-lg rounded-lg m-4 flex flex-col flex-grow">
         <div className="flex-none">
-          <MyNavbar />
+          <MyNavbar onCreateLuckyDrawClick={handleCreateLuckyDrawClick} />
         </div>
-        <div className=" bg-background-dark from-mainframe-green to-mainframe-dark flex-grow">
+        <div className="bg-background-dark from-mainframe-green to-mainframe-dark flex-grow">
           <Banner />
         </div>
-        <div className="flex-none">
-          <WalletCard />
-        </div>
       </div>
-      {/* <LuckyDraw /> */}
+
+      {showNewLuckyDraw && (
+        <NewLuckyDraw
+          onClose={() => setShowNewLuckyDraw(false)} // Pass a callback to handle closing
+        />
+      )}
     </div>
   );
 };

@@ -1,12 +1,30 @@
-import React from "react";
+import React, { useState } from "react";
 import { Button, ButtonGroup, Input } from "@nextui-org/react";
+import LuckyDrawEventCard from "./LuckyDrawEventCard"; // Import the card component
+
+interface LuckyDrawEvent {
+  eventName: string;
+  numPrizes: number;
+  drawTime: string;
+}
 
 const WalletCard: React.FC = () => {
+  const [luckyDrawEvents, setLuckyDrawEvents] = useState<LuckyDrawEvent[]>([]);
+
+  // Function to add a new lucky draw event to the list
+  const addLuckyDrawEvent = (event: LuckyDrawEvent) => {
+    setLuckyDrawEvents([...luckyDrawEvents, event]);
+  };
+
   return (
     <div className="flex flex-col items-center rounded-lg p-8">
       <h2 className="text-white text-lg font-semibold mb-6">VIEW RESULTS</h2>
-      <div className="w-full grid grid-cols-3 gap-4">
-        {/* Div 1 */}
+
+      {luckyDrawEvents.map((event, index) => (
+        <LuckyDrawEventCard key={index} {...event} />
+      ))}
+
+      {/* <div className="w-full grid grid-cols-3 gap-4">
         <div className="flex flex-col items-center justify-center space-y-2">
           <Button
             radius="md"
@@ -16,7 +34,6 @@ const WalletCard: React.FC = () => {
           </Button>
         </div>
 
-        {/* Div 2 */}
         <div className="flex flex-col items-center justify-center space-y-2">
           <Button
             radius="md"
@@ -26,7 +43,6 @@ const WalletCard: React.FC = () => {
           </Button>
         </div>
 
-        {/* Div 3 */}
         <div className="flex flex-col items-center justify-center space-y-2">
           <Button
             radius="md"
@@ -35,7 +51,7 @@ const WalletCard: React.FC = () => {
             Button 3
           </Button>
         </div>
-      </div>
+      </div> */}
     </div>
   );
 };
