@@ -70,6 +70,13 @@ contract Luckdraw is
 
     // address pool
     address[] addressPool;
+
+    // round history
+    struct RoundHistory {
+        address winner;
+        address[] addressPool;
+    }
+    RoundHistory[] roundHistory;
     
     // minimum deposit
     uint256 minDepositToken = 1 * 10**18;
@@ -179,6 +186,11 @@ contract Luckdraw is
         return lukydrawToken.balanceOf(address(this)) / 10**18;
     }
 
+    // Get round history
+    function getRoundHistory() public view returns (RoundHistory[] memory) {
+        return roundHistory;
+    }
+
     // Send LukydrawToken
     function transferLukydrawToken(address _receiver) public onlyOwner {
         require(
@@ -188,10 +200,22 @@ contract Luckdraw is
     }
 
     // Do lucky draw and transfer token to the winner with random num given
-    function doLuckyDraw(uint256 _randomNum) public onlyOwner {
-        uint256 _luckyNum = _randomNum % addressPool.length;    // transfer to index of address pool
-        transferLukydrawToken(addressPool[_luckyNum]);
+    function doLuckyDrawWithRandomNum(uint256 _randomNum) public onlyOwner {
+        // convert to index of address pool
+        uint256 _luckyNum = _randomNum % addressPool.length;
+        address _winnerAddress = addressPool[_luckyNum];
+
+        // add to round history 
+        roundHistory.push(RoundHistory({
+            winner: _winnerAddress,
+            addressPool: addressPool
+        }));
+        
+        // clear address pool
         delete addressPool;
+
+        // transfer to winner
+        transferLukydrawToken(_winnerAddress);
     }
 
 
