@@ -77,11 +77,5 @@ contract MyERC20Token {
         emit Transfer(_from, _to, _value);
         return true;
     }
-    // 水龙头函数
-    uint256 public constant FAUCET_AMOUNT = 100 * 10**decimals; // 分发100代币，考虑小数点
-    function faucet() public {
-        require(balance[address(this)] >= FAUCET_AMOUNT, "Insufficient faucet funds");
-        transfer(address(this), msg.sender, FAUCET_AMOUNT);
-    }
 }
 
