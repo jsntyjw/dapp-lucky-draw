@@ -10,7 +10,7 @@ contract MyERC20Token {
     string  public name;
     string  public symbol;
     uint    public immutable decimals;
-    uint256 public immutable totalSupply;
+    uint256 public totalSupply;
 
     mapping (address =>  uint256) public balance;
     mapping (address =>  mapping (address => uint)) public allowance;
@@ -77,11 +77,21 @@ contract MyERC20Token {
         emit Transfer(_from, _to, _value);
         return true;
     }
+
+    // Mint function
+    function mint(address account, uint256 amount) public {
+        require(account != address(0), "ERC20: mint to the zero address");
+
+        totalSupply += amount;
+        balance[account] += amount;
+        emit Transfer(address(0), account, amount);
+    }
     // 水龙头函数
-    uint256 public constant FAUCET_AMOUNT = 100 * 10**decimals; // 分发100代币，考虑小数点
+    // uint256 public FAUCET_AMOUNT = 100 * 10**token_decimals; 
     function faucet() public {
-        require(balance[address(this)] >= FAUCET_AMOUNT, "Insufficient faucet funds");
-        transfer(address(this), msg.sender, FAUCET_AMOUNT);
+        uint256 _faucet_amount = 100 * 10**decimals;   // 分发100代币，考虑小数点
+        // require(balanceOf(address(this)) >= FAUCET_AMOUNT, "Insufficient faucet funds");
+        // transfer(address(msg.sender), FAUCET_AMOUNT);
+        mint(msg.sender, _faucet_amount);
     }
 }
-
