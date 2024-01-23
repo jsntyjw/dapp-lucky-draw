@@ -45,7 +45,7 @@ contract Luckdraw is
     // this limit based on the network that you select, the size of the request,
     // and the processing of the callback request in the fulfillRandomWords()
     // function.
-    uint32 callbackGasLimit = 20000000;
+    uint32 callbackGasLimit = 2400000;
 
     // The default is 3, but you can set this higher.
     uint16 requestConfirmations = 3;
@@ -74,6 +74,7 @@ contract Luckdraw is
     // round history
     struct RoundHistory {
         address winner;
+        uint256 randomNum;
         address[] addressPool;
     }
     RoundHistory[] roundHistory;
@@ -116,6 +117,7 @@ contract Luckdraw is
         require(s_requests[_requestId].paid > 0, "request not found");
         s_requests[_requestId].fulfilled = true;
         s_requests[_requestId].randomWords = _randomWords;
+        doLuckyDrawWithRandomNum(_randomWords[0]);
         emit RequestFulfilled(
             _requestId,
             _randomWords,
@@ -144,6 +146,12 @@ contract Luckdraw is
             link.transfer(msg.sender, link.balanceOf(address(this))),
             "Unable to transfer"
         );
+    }
+
+    // Get Link tokens balance
+    function getLinkBalance() public view returns (uint256) {
+        LinkTokenInterface link = LinkTokenInterface(linkAddress);
+        return link.balanceOf(address(this)) / 10**18;
     }
 
 
@@ -199,15 +207,16 @@ contract Luckdraw is
         );
     }
 
-    // Do lucky draw and transfer token to the winner with random num given
-    function doLuckyDrawWithRandomNum(uint256 _randomNum) public onlyOwner {
+    // Do lucky draw, transfer token to the winner with random num given and save round history
+    function doLuckyDrawWithRandomNum(uint256 _randomNum) public {
         // convert to index of address pool
         uint256 _luckyNum = _randomNum % addressPool.length;
         address _winnerAddress = addressPool[_luckyNum];
 
-        // add to round history 
+        // save to round history 
         roundHistory.push(RoundHistory({
             winner: _winnerAddress,
+            randomNum: _luckyNum,
             addressPool: addressPool
         }));
         
