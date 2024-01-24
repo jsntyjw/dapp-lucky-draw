@@ -5,6 +5,7 @@ import Banner from "../components/Banner";
 import NewLuckyDraw from "@/components/NewLuckyDraw";
 import MyNavbar from "@/components/MyNavbar";
 import LuckyDrawCards from "@/components/LuckyDrawCards"; // Import the LuckyDrawCards component
+import TokenBalance from "@/components/TokenBalance";
 
 const Home: NextPage = () => {
   const [showNewLuckyDraw, setShowNewLuckyDraw] = useState(false);
@@ -71,6 +72,11 @@ const Home: NextPage = () => {
       {showNewLuckyDraw && (
         <NewLuckyDraw onClose={() => setShowNewLuckyDraw(false)} />
       )}
+
+      <div>
+        <TokenBalance userAddress={userAddress} />
+      </div>
+
       <div className="flex justify-between w-full p-4">
         <div className="w-full">
           <LuckyDrawCards cardData={cardData} />
