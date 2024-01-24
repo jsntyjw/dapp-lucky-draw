@@ -3,10 +3,9 @@ import { useState, useEffect } from "react";
 import detectEthereumProvider from "@metamask/detect-provider";
 import Web3 from "web3";
 
-import { abi } from "../abi/abi";
-
-// Import the admin address from your properties file
-import { ADMIN_WALLET_ADDRESS } from "../config"; // Adjust the import path
+// Import the ABI and contract address
+import abi from "../abi/abi.json";
+import { CONTRACT_ADDRESS, ADMIN_WALLET_ADDRESS } from "../config";
 
 interface MyNavbarProps {
   onCreateLuckyDrawClick: () => void;
@@ -16,8 +15,7 @@ interface MyNavbarProps {
 const MyNavbar: React.FC<MyNavbarProps> = ({ onCreateLuckyDrawClick }) => {
   const [userAddress, setUserAddress] = useState<string | null>(null);
   const [web3, setWeb3] = useState<Web3 | null>(null);
-
-  // Add a state variable to track whether the connected wallet matches the admin address
+  const [contract, setContract] = useState<any>(null); // State for the contract
   const [isAdmin, setIsAdmin] = useState<boolean>(false);
 
   useEffect(() => {
@@ -35,6 +33,13 @@ const MyNavbar: React.FC<MyNavbarProps> = ({ onCreateLuckyDrawClick }) => {
 
           // Check if the connected wallet matches the admin address
           setIsAdmin(accounts[0] === ADMIN_WALLET_ADDRESS);
+
+          // Initialize the contract instance
+          const contractInstance = new web3Instance.eth.Contract(
+            abi,
+            CONTRACT_ADDRESS
+          );
+          setContract(contractInstance);
         } catch (error) {
           console.error("Failed to connect to wallet:", error);
         }
@@ -65,13 +70,20 @@ const MyNavbar: React.FC<MyNavbarProps> = ({ onCreateLuckyDrawClick }) => {
   };
 
   const callFaucet = async () => {
-    // throw error if web3 or userAddress is null
-    if (!web3 || !userAddress) {
-      console.error("Web3 or userAddress not initialized.");
+    if (!web3 || !contract || !userAddress) {
+      console.error("Web3, contract, or userAddress not initialized.");
       return;
     }
 
-    abi.faucet(web3, userAddress);
+    try {
+      // Call the faucet method from your contract
+      const result = await contract.methods
+        .faucet()
+        .send({ from: userAddress });
+      console.log("Faucet called successfully:", result);
+    } catch (error) {
+      console.error("Error calling faucet:", error);
+    }
   };
 
   return (
@@ -89,8 +101,6 @@ const MyNavbar: React.FC<MyNavbarProps> = ({ onCreateLuckyDrawClick }) => {
       {/* Conditionally render the "Create Lucky Draw" button based on isAdmin */}
       {isAdmin && (
         <div className="flex justify-center">
-          {" "}
-          {/* Center the button horizontally */}
           <Button
             className="bg-fuchsia-50 text-black border border-solid border-gray-300 rounded-full px-4 py-2"
             onClick={onCreateLuckyDrawClick}
@@ -100,6 +110,7 @@ const MyNavbar: React.FC<MyNavbarProps> = ({ onCreateLuckyDrawClick }) => {
         </div>
       )}
 
+      {/* Button to get test tokens from the faucet */}
       {userAddress && (
         <div>
           <Button
