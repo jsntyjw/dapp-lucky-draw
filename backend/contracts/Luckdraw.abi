@@ -1,6 +1,27 @@
 [
 	{
 		"inputs": [],
+		"name": "acceptOwnership",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "joinPool",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "makeLuckyDrawTransfer",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [],
 		"stateMutability": "nonpayable",
 		"type": "constructor"
 	},
@@ -43,6 +64,24 @@
 		"type": "event"
 	},
 	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "_requestId",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256[]",
+				"name": "_randomWords",
+				"type": "uint256[]"
+			}
+		],
+		"name": "rawFulfillRandomWords",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
 		"anonymous": false,
 		"inputs": [
 			{
@@ -68,6 +107,26 @@
 		"type": "event"
 	},
 	{
+		"inputs": [],
+		"name": "requestLuckyDrawRandomNumber",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "requestRandomWords",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "requestId",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
 		"anonymous": false,
 		"inputs": [
 			{
@@ -87,8 +146,14 @@
 		"type": "event"
 	},
 	{
-		"inputs": [],
-		"name": "acceptOwnership",
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "_myRandomNum",
+				"type": "uint256"
+			}
+		],
+		"name": "setCurrentRoundRandomNum",
 		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"
@@ -97,23 +162,83 @@
 		"inputs": [
 			{
 				"internalType": "uint256",
-				"name": "_randomNum",
+				"name": "_minDepositToken",
 				"type": "uint256"
 			}
 		],
-		"name": "doLuckyDrawWithRandomNum",
+		"name": "setMinDepositToken",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "_receiver",
+				"type": "address"
+			}
+		],
+		"name": "transferLukydrawToken",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "to",
+				"type": "address"
+			}
+		],
+		"name": "transferOwnership",
 		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"
 	},
 	{
 		"inputs": [],
-		"name": "getAddressPool",
+		"name": "withdrawLink",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "getCurrentRound",
 		"outputs": [
 			{
-				"internalType": "address[]",
+				"components": [
+					{
+						"internalType": "address",
+						"name": "winner",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "requestId",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "randomNum",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "luckyNum",
+						"type": "uint256"
+					},
+					{
+						"internalType": "address[]",
+						"name": "addressPool",
+						"type": "address[]"
+					}
+				],
+				"internalType": "struct Luckdraw.Round",
 				"name": "",
-				"type": "address[]"
+				"type": "tuple"
 			}
 		],
 		"stateMutability": "view",
@@ -200,7 +325,17 @@
 					},
 					{
 						"internalType": "uint256",
+						"name": "requestId",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
 						"name": "randomNum",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "luckyNum",
 						"type": "uint256"
 					},
 					{
@@ -209,19 +344,12 @@
 						"type": "address[]"
 					}
 				],
-				"internalType": "struct Luckdraw.RoundHistory[]",
+				"internalType": "struct Luckdraw.Round[]",
 				"name": "",
 				"type": "tuple[]"
 			}
 		],
 		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "joinPool",
-		"outputs": [],
-		"stateMutability": "nonpayable",
 		"type": "function"
 	},
 	{
@@ -254,24 +382,6 @@
 		"inputs": [
 			{
 				"internalType": "uint256",
-				"name": "_requestId",
-				"type": "uint256"
-			},
-			{
-				"internalType": "uint256[]",
-				"name": "_randomWords",
-				"type": "uint256[]"
-			}
-		],
-		"name": "rawFulfillRandomWords",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint256",
 				"name": "",
 				"type": "uint256"
 			}
@@ -285,19 +395,6 @@
 			}
 		],
 		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "requestRandomWords",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "requestId",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "nonpayable",
 		"type": "function"
 	},
 	{
@@ -322,52 +419,6 @@
 			}
 		],
 		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "_minDepositToken",
-				"type": "uint256"
-			}
-		],
-		"name": "setMinDepositToken",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "_receiver",
-				"type": "address"
-			}
-		],
-		"name": "transferLukydrawToken",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "to",
-				"type": "address"
-			}
-		],
-		"name": "transferOwnership",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "withdrawLink",
-		"outputs": [],
-		"stateMutability": "nonpayable",
 		"type": "function"
 	}
 ]
