@@ -3,6 +3,8 @@ import { useState, useEffect } from "react";
 import detectEthereumProvider from "@metamask/detect-provider";
 import Web3 from "web3";
 
+import { abi } from "../abi/abi";
+
 // Import the admin address from your properties file
 import { ADMIN_WALLET_ADDRESS } from "../config"; // Adjust the import path
 
@@ -62,6 +64,16 @@ const MyNavbar: React.FC<MyNavbarProps> = ({ onCreateLuckyDrawClick }) => {
     }
   };
 
+  const callFaucet = async () => {
+    // throw error if web3 or userAddress is null
+    if (!web3 || !userAddress) {
+      console.error("Web3 or userAddress not initialized.");
+      return;
+    }
+
+    abi.faucet(web3, userAddress);
+  };
+
   return (
     <nav className="text-white p-4 pt-5 pb-5 flex justify-between items-center">
       <div className="flex items-center">
@@ -84,6 +96,17 @@ const MyNavbar: React.FC<MyNavbarProps> = ({ onCreateLuckyDrawClick }) => {
             onClick={onCreateLuckyDrawClick}
           >
             <b>Create Lucky Draw</b>
+          </Button>
+        </div>
+      )}
+
+      {userAddress && (
+        <div>
+          <Button
+            className="bg-fuchsia-50 text-black border border-solid border-gray-300 rounded-full px-4 py-2"
+            onClick={callFaucet}
+          >
+            <b>Call Faucet</b>
           </Button>
         </div>
       )}

@@ -2,6 +2,13 @@
 
 // export dummy methods for getLotteryRounds(), createLotteryRound(), joinLotteryRound(), drawLotteryRound()
 
+// abi array
+import luckyDrawABI from "./abi.json";
+
+import Web3 from "web3";
+
+const contractAddress = "0x50c571bF0FC736a1a520E2F058072a2b5830C929";
+
 export const abi = {
   getLotteryRounds() {
     return [
@@ -49,6 +56,31 @@ export const abi = {
     return {
       status: "success",
       message: "Lottery round drawn successfully",
+    };
+  },
+
+  faucet(web3Instace: Web3, addr: string) {
+    // Create contract instance
+    const contract = new web3Instace.eth.Contract(
+      luckyDrawABI,
+      contractAddress
+    );
+
+    console.log(`client wallet: ${addr}`);
+
+    // Call the faucet function
+    contract.methods
+      .faucet()
+      .send({
+        from: addr,
+      })
+      .then(function (receipt) {
+        console.log(receipt);
+      });
+
+    return {
+      status: "success",
+      message: "Faucet successfully",
     };
   },
 };
