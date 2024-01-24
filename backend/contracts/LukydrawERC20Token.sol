@@ -10,7 +10,7 @@ contract MyERC20Token {
     string  public name;
     string  public symbol;
     uint    public immutable decimals;
-    uint256 public immutable totalSupply;
+    uint256 public totalSupply;
 
     mapping (address =>  uint256) public balance;
     mapping (address =>  mapping (address => uint)) public allowance;
@@ -77,5 +77,13 @@ contract MyERC20Token {
         emit Transfer(_from, _to, _value);
         return true;
     }
-}
 
+    // Mint function
+    function mint(address account, uint256 amount) public {
+        require(account != address(0), "ERC20: mint to the zero address");
+
+        totalSupply += amount;
+        balance[account] += amount;
+        emit Transfer(address(0), account, amount);
+    }
+}
