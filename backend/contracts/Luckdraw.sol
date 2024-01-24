@@ -45,7 +45,7 @@ contract Luckdraw is
     // this limit based on the network that you select, the size of the request,
     // and the processing of the callback request in the fulfillRandomWords()
     // function.
-    uint32 callbackGasLimit = 2400000;
+    uint32 callbackGasLimit = 100000;
 
     // The default is 3, but you can set this higher.
     uint16 requestConfirmations = 3;
@@ -68,16 +68,16 @@ contract Luckdraw is
     address lukydrawTokenAddress = 0x50c571bF0FC736a1a520E2F058072a2b5830C929;
     MyERC20TokenOZ lukydrawToken = MyERC20TokenOZ(lukydrawTokenAddress);
 
-    // address pool
-    address[] addressPool;
-
-    // round history
-    struct RoundHistory {
+    // round
+    struct Round {
         address winner;
-        uint256 randomNum;
-        address[] addressPool;
+        uint256 requestId;      // VRF request id
+        uint256 randomNum;      // VRF random number
+        uint256 luckyNum;       // winner index in address pool
+        address[] addressPool;  // address pool
     }
-    RoundHistory[] roundHistory;
+    Round[] roundHistory;
+    Round currentRound;
     
     // minimum deposit
     uint256 minDepositToken = 1 * 10**18;
@@ -90,8 +90,7 @@ contract Luckdraw is
     {}
 
     function requestRandomWords()
-        external
-        onlyOwner
+        public 
         returns (uint256 requestId)
     {
         requestId = requestRandomness(
@@ -117,12 +116,12 @@ contract Luckdraw is
         require(s_requests[_requestId].paid > 0, "request not found");
         s_requests[_requestId].fulfilled = true;
         s_requests[_requestId].randomWords = _randomWords;
-        doLuckyDrawWithRandomNum(_randomWords[0]);
         emit RequestFulfilled(
             _requestId,
             _randomWords,
             s_requests[_requestId].paid
         );
+        currentRound.randomNum = _randomWords[0];
     }
 
     function getRequestStatus(
@@ -171,8 +170,13 @@ contract Luckdraw is
     // Add address to address pool
     function joinPool() public {
         require(
+            currentRound.requestId == 0,
+            "Current round is currently in progress"
+        );
+        require(
             lukydrawToken.balanceOf(msg.sender) >= minDepositToken,
-            "Balance not enough");
+            "Balance not enough"
+        );
         require(
             lukydrawToken.transferFrom(
                 msg.sender,
@@ -181,12 +185,12 @@ contract Luckdraw is
             ),
             "Deposit failed"
         );
-        addressPool.push(msg.sender);
+        currentRound.addressPool.push(msg.sender);
     }
 
     // Get address pool
-    function getAddressPool() public view returns (address[] memory){
-        return addressPool;
+    function getCurrentRound() public view returns (Round memory){
+        return currentRound;
     }
 
     // Get pool balance
@@ -195,7 +199,7 @@ contract Luckdraw is
     }
 
     // Get round history
-    function getRoundHistory() public view returns (RoundHistory[] memory) {
+    function getRoundHistory() public view returns (Round[] memory) {
         return roundHistory;
     }
 
@@ -207,24 +211,46 @@ contract Luckdraw is
         );
     }
 
-    // Do lucky draw, transfer token to the winner with random num given and save round history
-    function doLuckyDrawWithRandomNum(uint256 _randomNum) public {
+    // Request lucky draw random number
+    function requestLuckyDrawRandomNumber() public {
+        require(
+            currentRound.requestId == 0,
+            "Already request random number to VRF"
+        );
+
+        currentRound.requestId = requestRandomWords();
+    }
+
+    // Make lucky draw transfer, transfer token to the winner and save round history
+    function makeLuckyDrawTransfer() public {
+
+        require(
+            currentRound.randomNum != 0,
+            "Random number is not ready"
+        );
+
         // convert to index of address pool
-        uint256 _luckyNum = _randomNum % addressPool.length;
-        address _winnerAddress = addressPool[_luckyNum];
+        currentRound.luckyNum = currentRound.randomNum % currentRound.addressPool.length;
+        currentRound.winner = currentRound.addressPool[currentRound.luckyNum];
 
         // save to round history 
-        roundHistory.push(RoundHistory({
-            winner: _winnerAddress,
-            randomNum: _luckyNum,
-            addressPool: addressPool
-        }));
+        roundHistory.push(currentRound);
         
         // clear address pool
-        delete addressPool;
+        address _winnerAddress = currentRound.winner;
+        delete currentRound;
 
         // transfer to winner
         transferLukydrawToken(_winnerAddress);
+    }
+
+    // FOR TEST: set current round randomNum
+    function setCurrentRoundRandomNum(uint256 _myRandomNum) public {
+        require(
+            currentRound.requestId == 0,
+            "Already sent VRF request, can not set manually"
+        );
+        currentRound.randomNum = _myRandomNum;
     }
 
 
