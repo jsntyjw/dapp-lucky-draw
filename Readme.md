@@ -10,7 +10,15 @@ Get minimum deposit token amount in current round
 function getMinDepositToken() external view returns (uint256)
 ```
 
-##### 2. getCurrentRound()
+##### 2. setMinDepositToken()
+
+Set minimum deposit token amount in current round
+
+```solidity
+function setMinDepositToken(uint256 _minDepositToken) external onlyOwner
+```
+
+##### 3. getCurrentRound()
 
 Get current round information
 
@@ -26,7 +34,7 @@ struct Round {
 }
 ```
 
-##### 3. getPoolBalance()
+##### 4. getPoolBalance()
 
 Get balance of the pool in current round 
 
@@ -34,7 +42,7 @@ Get balance of the pool in current round
 function getPoolBalance() public view returns (uint256)
 ```
 
-##### 4. getRoundHistory()
+##### 5. getRoundHistory()
 
 Get round history
 
@@ -50,7 +58,7 @@ struct Round {
 }
 ```
 
-##### 5. joinPool()
+##### 6. joinPool()
 
 Join current round and deposit tokens
 
@@ -58,7 +66,7 @@ Join current round and deposit tokens
 function joinPool() public
 ```
 
-##### 6. requestLuckyDrawRandomNumber()
+##### 7. requestLuckyDrawRandomNumber()
 
 Request random number from Chainlink VRF
 
@@ -68,7 +76,7 @@ Request random number from Chainlink VRF
 function requestLuckyDrawRandomNumber() public
 ```
 
-##### 7. makeLuckyDrawTransfer()
+##### 8. makeLuckyDrawTransfer()
 
 After random number being generated, use this function to transfer tokens to the winner
 
@@ -76,7 +84,7 @@ After random number being generated, use this function to transfer tokens to the
 function makeLuckyDrawTransfer() public
 ```
 
-##### 
+
 
 #### Main logic
 
