@@ -5,7 +5,7 @@ import Web3 from "web3";
 
 // Import the ABI and contract address
 import abi from "../abi/abi.json";
-import { CONTRACT_ADDRESS } from "../config";
+import { TOKEN_CONTRACT_ADDRESS } from "../config";
 
 interface MyNavbarProps {
   userAddress: string | null; // Add userAddress to the interface
@@ -33,7 +33,7 @@ const TokenBalance: React.FC<MyNavbarProps> = () => {
           // Initialize the contract instance
           const contractInstance = new web3Instance.eth.Contract(
             abi,
-            CONTRACT_ADDRESS
+            TOKEN_CONTRACT_ADDRESS
           );
           setContract(contractInstance);
 

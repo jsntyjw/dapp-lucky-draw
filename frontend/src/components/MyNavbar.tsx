@@ -5,7 +5,7 @@ import Web3 from "web3";
 
 // Import the ABI and contract address
 import abi from "../abi/abi.json";
-import { CONTRACT_ADDRESS, ADMIN_WALLET_ADDRESS } from "../config";
+import { TOKEN_CONTRACT_ADDRESS, ADMIN_WALLET_ADDRESS } from "../config";
 
 interface MyNavbarProps {
   onCreateLuckyDrawClick: () => void;
@@ -37,7 +37,7 @@ const MyNavbar: React.FC<MyNavbarProps> = ({ onCreateLuckyDrawClick }) => {
           // Initialize the contract instance
           const contractInstance = new web3Instance.eth.Contract(
             abi,
-            CONTRACT_ADDRESS
+            TOKEN_CONTRACT_ADDRESS
           );
           setContract(contractInstance);
         } catch (error) {
@@ -105,7 +105,7 @@ const MyNavbar: React.FC<MyNavbarProps> = ({ onCreateLuckyDrawClick }) => {
             className="bg-fuchsia-50 text-black border border-solid border-gray-300 rounded-full px-4 py-2"
             onClick={onCreateLuckyDrawClick}
           >
-            <b>Create Lucky Draw</b>
+            <b>Set Lucky Draw Base Amount</b>
           </Button>
         </div>
       )}
