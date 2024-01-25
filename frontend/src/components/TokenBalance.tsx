@@ -3,9 +3,13 @@ import { useState, useEffect } from "react";
 import detectEthereumProvider from "@metamask/detect-provider";
 import Web3 from "web3";
 
-// Import the ABI and contract address
-import abi from "../abi/abi.json";
+// Import the ABI and contract address for the token contract
+import tokenAbi from "../../../backend/contracts/LukydrawERC20TokenOZ.json";
 import { TOKEN_CONTRACT_ADDRESS } from "../config";
+
+// Import the ABI and contract address for the contract with getMinDepositToken function
+import roundContractAbi from "../../../backend/contracts/Luckdraw.json";
+import { CONTRACT_ADDRESS } from "../config";
 
 interface MyNavbarProps {
   userAddress: string | null; // Add userAddress to the interface
@@ -14,8 +18,12 @@ interface MyNavbarProps {
 const TokenBalance: React.FC<MyNavbarProps> = () => {
   const [userAddress, setUserAddress] = useState<string | null>(null);
   const [web3, setWeb3] = useState<Web3 | null>(null);
-  const [contract, setContract] = useState<any>(null); // State for the contract
+  const [tokenContract, setTokenContract] = useState<any>(null); // State for the token contract
+  const [roundContract, setRoundContract] = useState<any>(null); // State for the round contract
   const [tokenBalance, setTokenBalance] = useState<number | null>(null); // State to store token balance
+  const [latestRoundBaseAmount, setLatestRoundBaseAmount] = useState<
+    number | null
+  >(null); // State to store latest round base amount
 
   useEffect(() => {
     const initializeWeb3 = async () => {
@@ -30,17 +38,27 @@ const TokenBalance: React.FC<MyNavbarProps> = () => {
           setUserAddress(accounts[0]);
           setWeb3(web3Instance);
 
-          // Initialize the contract instance
-          const contractInstance = new web3Instance.eth.Contract(
-            abi,
+          // Initialize the token contract instance
+          const tokenContractInstance = new web3Instance.eth.Contract(
+            tokenAbi,
             TOKEN_CONTRACT_ADDRESS
           );
-          setContract(contractInstance);
+          setTokenContract(tokenContractInstance);
+
+          // Initialize the round contract instance
+          const roundContractInstance = new web3Instance.eth.Contract(
+            roundContractAbi,
+            CONTRACT_ADDRESS
+          );
+          setRoundContract(roundContractInstance);
 
           // Fetch token balance
           if (accounts[0]) {
-            fetchTokenBalance(accounts[0], contractInstance);
+            fetchTokenBalance(accounts[0], tokenContractInstance);
           }
+
+          // Fetch the latest round base amount
+          fetchLatestRoundBaseAmount(roundContractInstance);
         } catch (error) {
           console.error("Failed to connect to wallet:", error);
         }
@@ -60,8 +78,8 @@ const TokenBalance: React.FC<MyNavbarProps> = () => {
         .balanceOf(address)
         .call();
 
-      // Explicitly convert balanceInSmallestUnit to a JavaScript number
-      const balance = Number(balanceInSmallestUnit) / 10 ** decimals;
+      // Convert balanceInSmallestUnit to a JavaScript number and adjust for decimals
+      const balance = parseFloat(balanceInSmallestUnit) / 10 ** decimals;
 
       console.log("Token balance fetched:", balance);
 
@@ -71,12 +89,47 @@ const TokenBalance: React.FC<MyNavbarProps> = () => {
     }
   };
 
+  const fetchLatestRoundBaseAmount = async (contractInstance: any) => {
+    try {
+      const latestRoundBaseAmount = await contractInstance.methods
+        .getMinDepositToken()
+        .call();
+
+      // Convert latestRoundBaseAmount to a regular JavaScript number
+      const latestRoundBaseAmountNumber = Number(latestRoundBaseAmount);
+
+      setLatestRoundBaseAmount(latestRoundBaseAmountNumber);
+
+      console.log(
+        "Latest Round Base Amount fetched:",
+        latestRoundBaseAmountNumber
+      );
+    } catch (error) {
+      console.error("Error fetching latest round base amount:", error);
+    }
+  };
+
   return (
-    <div className="flex items-center flex-col">
-      <p className="text-xl font-semibold text-white">
-        🚀 Your Token Balance:{" "}
-        {tokenBalance !== null ? tokenBalance : "Fetching..."} LDT 🌟
-      </p>
+    <div className="flex space-x-4">
+      {/* Token Balance Card */}
+      <div className="max-w-md rounded shadow-lg p-4">
+        <div className="font-bold text-xl mb-4">🚀 Your Token Balance: </div>
+        <div className="text-5xl font-semibold">
+          {tokenBalance !== null ? tokenBalance.toFixed(2) : "Fetching..."} LDT
+          🌟
+        </div>
+      </div>
+
+      {/* Latest Round Base Amount Card */}
+      <div className="max-w-md rounded shadow-lg p-4">
+        <div className="font-bold text-xl mb-4">💵Latest Round Base Amount</div>
+        <div className="text-5xl font-semibold">
+          {latestRoundBaseAmount !== null
+            ? latestRoundBaseAmount.toFixed(2)
+            : "Fetching..."}{" "}
+          LDT 🌟
+        </div>
+      </div>
     </div>
   );
 };
