@@ -1,3 +1,4 @@
+// Import necessary libraries and components
 import type { NextPage } from "next";
 import { useState } from "react";
 
@@ -6,10 +7,15 @@ import NewLuckyDraw from "@/components/NewLuckyDraw";
 import MyNavbar from "@/components/MyNavbar";
 import LuckyDrawCards from "@/components/LuckyDrawCards"; // Import the LuckyDrawCards component
 import TokenBalance from "@/components/TokenBalance";
+import Alert from "../components/Alert"; // Import the Alert component
 
 const Home: NextPage = () => {
   const [showNewLuckyDraw, setShowNewLuckyDraw] = useState(false);
   const [userAddress] = useState<string | null>(null);
+  const [alert, setAlert] = useState<{
+    message: string;
+    type: "success" | "error";
+  } | null>(null); // Add alert state
 
   const handleCreateLuckyDrawClick = () => {
     setShowNewLuckyDraw(true);
@@ -56,6 +62,14 @@ const Home: NextPage = () => {
     // Add more card data objects as needed
   ];
 
+  // Function to show the alert
+  const showAlert = (message: string, type: "success" | "error") => {
+    setAlert({ message, type });
+    setTimeout(() => {
+      setAlert(null);
+    }, 3000); // Hide the alert after 3 seconds (adjust as needed)
+  };
+
   return (
     <div className="bg-slate-400 flex flex-col justify-center items-center w-full h-screen">
       <div className="bg-background-dark shadow-lg rounded-lg m-4 flex flex-col flex-grow">
@@ -77,9 +91,19 @@ const Home: NextPage = () => {
         <TokenBalance userAddress={userAddress} />
       </div>
 
+      {/* Display the Alert component if an alert is present */}
+      {alert && (
+        <Alert
+          message={alert.message}
+          type={alert.type}
+          onClose={() => setAlert(null)}
+        />
+      )}
+
       <div className="flex justify-between w-full p-4">
         <div className="w-full">
-          <LuckyDrawCards cardData={cardData} />
+          {/* Pass showAlert function to LuckyDrawCards component */}
+          <LuckyDrawCards cardData={cardData} showAlert={showAlert} />
         </div>
       </div>
     </div>
