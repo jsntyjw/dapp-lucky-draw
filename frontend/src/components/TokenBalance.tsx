@@ -52,13 +52,24 @@ const TokenBalance: React.FC<MyNavbarProps> = () => {
           );
           setRoundContract(roundContractInstance);
 
-          // Fetch token balance
+          // Fetch token balance initially
           if (accounts[0]) {
             fetchTokenBalance(accounts[0], tokenContractInstance);
           }
 
-          // Fetch the latest round base amount
+          // Fetch the latest round base amount initially
           fetchLatestRoundBaseAmount(roundContractInstance);
+
+          // Periodically refresh data every 5 seconds (adjust the interval as needed)
+          const refreshInterval = setInterval(async () => {
+            if (accounts[0]) {
+              fetchTokenBalance(accounts[0], tokenContractInstance);
+            }
+            fetchLatestRoundBaseAmount(roundContractInstance);
+          }, 3); // Refresh every 5 seconds
+
+          // Cleanup the interval when the component unmounts
+          return () => clearInterval(refreshInterval);
         } catch (error) {
           console.error("Failed to connect to wallet:", error);
         }
@@ -81,8 +92,6 @@ const TokenBalance: React.FC<MyNavbarProps> = () => {
       // Convert balanceInSmallestUnit to a JavaScript number and adjust for decimals
       const balance = parseFloat(balanceInSmallestUnit) / 10 ** decimals;
 
-      console.log("Token balance fetched:", balance);
-
       setTokenBalance(balance);
     } catch (error) {
       console.error("Error fetching token balance:", error);
@@ -99,11 +108,6 @@ const TokenBalance: React.FC<MyNavbarProps> = () => {
       const latestRoundBaseAmountNumber = Number(latestRoundBaseAmount);
 
       setLatestRoundBaseAmount(latestRoundBaseAmountNumber);
-
-      console.log(
-        "Latest Round Base Amount fetched:",
-        latestRoundBaseAmountNumber
-      );
     } catch (error) {
       console.error("Error fetching latest round base amount:", error);
     }

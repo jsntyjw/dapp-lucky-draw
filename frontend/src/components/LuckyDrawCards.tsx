@@ -33,18 +33,20 @@ const LuckyDrawCards: React.FC<LuckyDrawCardsProps> = ({
     message: string;
     type: "success" | "error";
   } | null>(null);
+  const [isTransactionPending, setIsTransactionPending] = useState(false);
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
   };
 
   const handleParticipateClick = async (round_no: number) => {
-    try {
-      showAlert(
-        "Transaction pending... Please approve transcation in Metamask",
-        "success"
-      );
+    setAlert({
+      message: "Transaction pending... Please approve transaction in Metamask",
+      type: "success",
+    });
+    setIsTransactionPending(true);
 
+    try {
       if (!roundContract || !web3) {
         console.error("Contract or Web3 not initialized.");
         showAlert("Contract or Web3 not initialized", "error");
@@ -52,8 +54,6 @@ const LuckyDrawCards: React.FC<LuckyDrawCardsProps> = ({
       }
 
       const accounts = await web3.eth.getAccounts();
-
-      // Create a contract instance
       const roundContractInstance = new web3.eth.Contract(
         roundContractAbi,
         CONTRACT_ADDRESS
@@ -64,49 +64,32 @@ const LuckyDrawCards: React.FC<LuckyDrawCardsProps> = ({
         TOKEN_CONTRACT_ADDRESS
       );
 
-      // Send the transaction and get the receipt
       const minDepositToken = await roundContractInstance.methods
         .getMinDepositToken()
         .call();
 
-      showAlert(
-        "Transaction pending... Please approve transcation in Metamask",
-        "success"
-      );
-
       const minDepositTokenNumber = Number(minDepositToken.toString());
-
       const approvalAmountWei = minDepositTokenNumber * 10 ** 18;
 
       await tokenContractInstance.methods
         .approve(CONTRACT_ADDRESS, approvalAmountWei)
         .send({ from: accounts[0] });
 
-      showAlert(
-        "Transaction pending... Please approve another transcation in Metamask",
-        "success"
-      );
-
       const receipt = await roundContractInstance.methods
         .joinPool(round_no)
         .send({ from: accounts[0] });
 
-      showAlert("Transaction pending... Please wait...", "success");
-
-      // Check the status in the receipt
       if (receipt.status) {
-        // Transaction successful
-        setTimeout(() => {
-          showAlert(
+        setAlert({
+          message:
             "Operation Successful... You have joined the lucky draw pool",
-            "success"
-          );
-        }, 500); // Delay showAlert for 500 milliseconds
+          type: "success",
+        });
       } else {
-        // Transaction failed
-        setTimeout(() => {
-          showAlert("Transaction Failed", "error");
-        }, 500); // Delay showAlert for 500 milliseconds
+        setAlert({
+          message: "Transaction Failed",
+          type: "error",
+        });
       }
     } catch (error) {
       console.error("Error participating in the lucky draw pool:", error);
@@ -114,6 +97,12 @@ const LuckyDrawCards: React.FC<LuckyDrawCardsProps> = ({
         message: "Error participating in the lucky draw pool",
         type: "error",
       });
+    } finally {
+      setIsTransactionPending(false);
+      // Automatically hide the alert after a few seconds
+      setTimeout(() => {
+        setAlert(null);
+      }, 2500); // 2500 milliseconds (5 seconds) delay before hiding
     }
   };
 
@@ -121,16 +110,13 @@ const LuckyDrawCards: React.FC<LuckyDrawCardsProps> = ({
     const initializeWeb3 = async () => {
       const provider = await detectEthereumProvider();
       if (provider) {
-        const web3Instance = new Web3(provider as any); // Cast provider to any
-
-        // Request access to the user's MetaMask account
+        const web3Instance = new Web3(provider as any);
         try {
-          await (provider as any).request({ method: "eth_requestAccounts" }); // Cast provider to any
+          await (provider as any).request({ method: "eth_requestAccounts" });
           const accounts = await web3Instance.eth.getAccounts();
           setUserAddress(accounts[0]);
           setWeb3(web3Instance);
 
-          // Initialize the round contract instance
           const roundContractInstance = new web3Instance.eth.Contract(
             roundContractAbi,
             CONTRACT_ADDRESS
@@ -180,7 +166,6 @@ const LuckyDrawCards: React.FC<LuckyDrawCardsProps> = ({
   return (
     <div className="flex flex-wrap justify-center mt-10">
       {renderCards()}
-      {/* Pagination controls */}
       <div className="mt-4 flex justify-center">
         {Array.from({ length: totalPages }).map((_, index) => (
           <button
@@ -197,7 +182,6 @@ const LuckyDrawCards: React.FC<LuckyDrawCardsProps> = ({
         ))}
       </div>
 
-      {/* Display the Alert component if an alert is present */}
       {alert && (
         <Alert
           message={alert.message}

@@ -7,16 +7,6 @@ type AlertProps = {
 };
 
 const Alert: React.FC<AlertProps> = ({ message, type, onClose }) => {
-  useEffect(() => {
-    const timeout = setTimeout(() => {
-      onClose();
-    }, 3000); // Close the alert after 3 seconds (adjust as needed)
-
-    return () => {
-      clearTimeout(timeout);
-    };
-  }, [onClose]);
-
   return (
     <div
       className={`fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-70`}
