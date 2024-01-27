@@ -6,6 +6,7 @@ import Web3 from "web3";
 // Import the ABI and contract address
 import abi from "../abi/abi.json";
 import { TOKEN_CONTRACT_ADDRESS, ADMIN_WALLET_ADDRESS } from "../config";
+import Alert from "./Alert";
 
 interface MyNavbarProps {
   onCreateLuckyDrawClick: () => void;
@@ -17,6 +18,10 @@ const MyNavbar: React.FC<MyNavbarProps> = ({ onCreateLuckyDrawClick }) => {
   const [web3, setWeb3] = useState<Web3 | null>(null);
   const [contract, setContract] = useState<any>(null); // State for the contract
   const [isAdmin, setIsAdmin] = useState<boolean>(false);
+  const [alert, setAlert] = useState<{
+    message: string;
+    type: "success" | "error";
+  } | null>(null); // State for the alert message
 
   useEffect(() => {
     const initializeWeb3 = async () => {
@@ -76,13 +81,39 @@ const MyNavbar: React.FC<MyNavbarProps> = ({ onCreateLuckyDrawClick }) => {
     }
 
     try {
+      // Show a pending transaction alert
+      setAlert({
+        message: "Transaction pending... Please wait.",
+        type: "success",
+      });
+
       // Call the faucet method from your contract
       const result = await contract.methods
         .faucet()
         .send({ from: userAddress });
       console.log("Faucet called successfully:", result);
+
+      // Show a success message and automatically hide it after a few seconds
+      setAlert({
+        message: "Faucet called successfully.",
+        type: "success",
+      });
+
+      setTimeout(() => {
+        setAlert(null); // Hide the alert after a few seconds
+      }, 5000); // 5000 milliseconds (5 seconds) delay before hiding
     } catch (error) {
       console.error("Error calling faucet:", error);
+
+      // Show an error message and automatically hide it after a few seconds
+      setAlert({
+        message: "Error calling faucet.",
+        type: "error",
+      });
+
+      setTimeout(() => {
+        setAlert(null); // Hide the alert after a few seconds
+      }, 5000); // 5000 milliseconds (5 seconds) delay before hiding
     }
   };
 
@@ -133,6 +164,15 @@ const MyNavbar: React.FC<MyNavbarProps> = ({ onCreateLuckyDrawClick }) => {
         >
           <b>Connect Wallet</b>
         </Button>
+      )}
+
+      {/* Display the alert message */}
+      {alert && (
+        <Alert
+          message={alert.message}
+          type={alert.type}
+          onClose={() => setAlert(null)}
+        />
       )}
     </nav>
   );
