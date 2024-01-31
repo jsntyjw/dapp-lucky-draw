@@ -5,9 +5,11 @@ import { useState } from "react";
 import Banner from "../components/Banner";
 import NewLuckyDraw from "@/components/NewLuckyDraw";
 import MyNavbar from "@/components/MyNavbar";
-import LuckyDrawCards from "@/components/LuckyDrawCards"; // Import the LuckyDrawCards component
 import TokenBalance from "@/components/TokenBalance";
 import Alert from "../components/Alert"; // Import the Alert component
+import LuckyDrawButton from "@/components/LuckyDrawButton";
+import JoinLuckyDrawPool from "@/components/JoinLuckyDraw";
+import RoundHistoryTable from "@/components/RoundHistory";
 
 const Home: NextPage = () => {
   const [showNewLuckyDraw, setShowNewLuckyDraw] = useState(false);
@@ -25,39 +27,33 @@ const Home: NextPage = () => {
   const cardData = [
     {
       round_no: 1,
-      base_prize: 100,
       participants: ["Address1", "Address2", "Address3"],
-      is_resolved: false,
+      winner: "Address1",
     },
     {
       round_no: 2,
-      base_prize: 200,
       participants: ["Address4", "Address5", "Address6"],
-      is_resolved: true,
+      winner: "Address1",
     },
     {
       round_no: 3,
-      base_prize: 150,
       participants: ["Address7", "Address8", "Address9"],
-      is_resolved: true,
+      winner: "Address1",
     },
     {
       round_no: 4,
-      base_prize: 300,
       participants: ["Address10", "Address11", "Address12"],
-      is_resolved: true,
+      winner: "Address1",
     },
     {
       round_no: 5,
-      base_prize: 120,
       participants: ["Address13", "Address14", "Address15"],
-      is_resolved: true,
+      winner: "Address1",
     },
     {
       round_no: 6,
-      base_prize: 250,
       participants: ["Address16", "Address17", "Address18"],
-      is_resolved: true,
+      winner: "Address1",
     },
     // Add more card data objects as needed
   ];
@@ -91,6 +87,12 @@ const Home: NextPage = () => {
         <TokenBalance userAddress={userAddress} />
       </div>
 
+      <LuckyDrawButton userAddress={userAddress} />
+
+      <JoinLuckyDrawPool userAddress={userAddress} />
+
+      <RoundHistoryTable />
+
       {/* Display the Alert component if an alert is present */}
       {alert && (
         <Alert
@@ -99,13 +101,6 @@ const Home: NextPage = () => {
           onClose={() => setAlert(null)}
         />
       )}
-
-      <div className="flex justify-between w-full p-4">
-        <div className="w-full">
-          {/* Pass showAlert function to LuckyDrawCards component */}
-          <LuckyDrawCards cardData={cardData} showAlert={showAlert} />
-        </div>
-      </div>
     </div>
   );
 };
