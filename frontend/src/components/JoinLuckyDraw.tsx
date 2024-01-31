@@ -135,7 +135,7 @@ const JoinLuckyDrawPool: React.FC<LuckyDrawButtonProps> = ({}) => {
       {
         <div className="flex justify-center">
           <Button
-            className="bg-fuchsia-50 text-black border border-solid border-gray-300 rounded-full px-4 py-2"
+            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-4 px-8 rounded-full text-lg"
             onClick={handleJoinPoolClick}
           >
             <b>Join Pool</b>

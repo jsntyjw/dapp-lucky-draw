@@ -23,51 +23,8 @@ const Home: NextPage = () => {
     setShowNewLuckyDraw(true);
   };
 
-  // Example card data with six items
-  const cardData = [
-    {
-      round_no: 1,
-      participants: ["Address1", "Address2", "Address3"],
-      winner: "Address1",
-    },
-    {
-      round_no: 2,
-      participants: ["Address4", "Address5", "Address6"],
-      winner: "Address1",
-    },
-    {
-      round_no: 3,
-      participants: ["Address7", "Address8", "Address9"],
-      winner: "Address1",
-    },
-    {
-      round_no: 4,
-      participants: ["Address10", "Address11", "Address12"],
-      winner: "Address1",
-    },
-    {
-      round_no: 5,
-      participants: ["Address13", "Address14", "Address15"],
-      winner: "Address1",
-    },
-    {
-      round_no: 6,
-      participants: ["Address16", "Address17", "Address18"],
-      winner: "Address1",
-    },
-    // Add more card data objects as needed
-  ];
-
-  // Function to show the alert
-  const showAlert = (message: string, type: "success" | "error") => {
-    setAlert({ message, type });
-    setTimeout(() => {
-      setAlert(null);
-    }, 3000); // Hide the alert after 3 seconds (adjust as needed)
-  };
-
   return (
-    <div className="bg-slate-400 flex flex-col justify-center items-center w-full h-screen">
+    <div className="bg-slate-400 flex flex-col justify-center items-center w-screen h-screen">
       <div className="bg-background-dark shadow-lg rounded-lg m-4 flex flex-col flex-grow">
         <div className="flex-none">
           <MyNavbar
@@ -78,20 +35,31 @@ const Home: NextPage = () => {
         <div className="bg-background-dark from-mainframe-green to-mainframe-dark">
           <Banner />
         </div>
+
+        <div className="flex">
+          {/* Left side */}
+          <div className="flex-1 p-4 flex items-center justify-center">
+            <div>
+              <TokenBalance userAddress={userAddress} />
+              <div className="flex space-x-4">
+                {/* Token Balance Card */}
+                <LuckyDrawButton userAddress={userAddress} />
+
+                {/* Latest Round Base Amount Card */}
+                <JoinLuckyDrawPool userAddress={userAddress} />
+              </div>
+            </div>
+          </div>
+
+          {/* Right side */}
+          <div className="flex-1 p-4">
+            <RoundHistoryTable />
+          </div>
+        </div>
       </div>
       {showNewLuckyDraw && (
         <NewLuckyDraw onClose={() => setShowNewLuckyDraw(false)} />
       )}
-
-      <div>
-        <TokenBalance userAddress={userAddress} />
-      </div>
-
-      <LuckyDrawButton userAddress={userAddress} />
-
-      <JoinLuckyDrawPool userAddress={userAddress} />
-
-      <RoundHistoryTable />
 
       {/* Display the Alert component if an alert is present */}
       {alert && (

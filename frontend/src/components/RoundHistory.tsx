@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Web3 from "web3";
 import detectEthereumProvider from "@metamask/detect-provider";
+import ReactPaginate from "react-paginate";
 
 import roundContractAbi from "../../../backend/contracts/Luckdraw.json";
 import { CONTRACT_ADDRESS } from "../config";
@@ -14,12 +15,13 @@ interface Round {
 }
 
 function RoundHistoryTable() {
-  const [roundHistory, setRoundHistory] = useState<Round[]>([]); // Specify the type as Round[]
+  const [roundHistory, setRoundHistory] = useState<Round[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [contract, setContract] = useState<any | null>(null);
   const [web3, setWeb3] = useState<any | null>(null);
   const [userAddress, setUserAddress] = useState<string | null>(null);
   const [roundContract, setRoundContract] = useState<any>(null);
+  const perPage = 10; // Number of items per page
 
   useEffect(() => {
     const initializeWeb3 = async () => {
@@ -56,25 +58,51 @@ function RoundHistoryTable() {
     initializeWeb3();
   }, []);
 
+  // Calculate the total number of pages
+  const pageCount = Math.ceil(roundHistory.length / perPage);
+
+  // Function to handle page change
+  const handlePageChange = (selectedPage: { selected: number }) => {
+    setCurrentPage(selectedPage.selected + 1);
+  };
+
+  // Calculate the range of items to display on the current page
+  const startIndex = (currentPage - 1) * perPage;
+  const endIndex = startIndex + perPage;
+
+  // Get the items to display on the current page
+  const itemsToDisplay = roundHistory.slice(startIndex, endIndex);
+
   return (
     <div>
-      <h1>Round History</h1>
-      <table className="table-auto">
+      <h1 className="text-2xl font-bold mb-4">Round History</h1>
+      <table className="min-w-full table-auto">
         <thead>
           <tr>
-            <th>Round Number</th>
-            <th>Winner Address</th>
+            <th className="px-4 py-2">Round Number</th>
+            <th className="px-4 py-2">Winner Address</th>
           </tr>
         </thead>
         <tbody>
-          {roundHistory.map((round, index) => (
+          {itemsToDisplay.map((round, index) => (
             <tr key={index}>
-              <td>{index + 1}</td>
-              <td>{round.winner}</td>
+              <td className="border px-4 py-2">{startIndex + index + 1}</td>
+              <td className="border px-4 py-2">🏆{round.winner}</td>
             </tr>
           ))}
         </tbody>
       </table>
+      <ReactPaginate
+        previousLabel={"Previous"}
+        nextLabel={"Next"}
+        breakLabel={"..."}
+        pageCount={pageCount}
+        marginPagesDisplayed={2}
+        pageRangeDisplayed={5}
+        onPageChange={handlePageChange}
+        containerClassName={"pagination mt-4"}
+        activeClassName={"active"}
+      />
     </div>
   );
 }

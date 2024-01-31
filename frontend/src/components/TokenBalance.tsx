@@ -1,4 +1,3 @@
-import { Avatar } from "@nextui-org/react";
 import { useState, useEffect } from "react";
 import detectEthereumProvider from "@metamask/detect-provider";
 import Web3 from "web3";

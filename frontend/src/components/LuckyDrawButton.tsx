@@ -164,7 +164,7 @@ const LuckyDrawButton: React.FC<LuckyDrawButtonProps> = () => {
       {isAdmin && (
         <div className="flex justify-center">
           <Button
-            className="bg-fuchsia-50 text-black border border-solid border-gray-300 rounded-full px-4 py-2"
+            className="bg-orange-500 hover:bg-orange-700 text-white font-bold py-4 px-8 rounded-full text-lg"
             onClick={handleDrawLottery}
           >
             <b>Draw a Lottery</b>
