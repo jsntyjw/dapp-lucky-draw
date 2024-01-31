@@ -39,11 +39,6 @@ const LuckyDrawButton: React.FC<LuckyDrawButtonProps> = () => {
         setWeb3(web3Instance);
         setIsAdmin(accounts[0] === ADMIN_WALLET_ADDRESS);
 
-        // Check if  connected wallet matches the admin address
-
-        console.log("userAddress: " + userAddress);
-        console.log("ADMIN_WALLET_ADDRESS: " + ADMIN_WALLET_ADDRESS);
-
         try {
           await (provider as any).request({ method: "eth_requestAccounts" });
           setWeb3(web3Instance);

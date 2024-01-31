@@ -21,7 +21,7 @@ function RoundHistoryTable() {
   const [web3, setWeb3] = useState<any | null>(null);
   const [userAddress, setUserAddress] = useState<string | null>(null);
   const [roundContract, setRoundContract] = useState<any>(null);
-  const perPage = 10; // Number of items per page
+  const perPage = 5; // Number of items per page
 
   useEffect(() => {
     const initializeWeb3 = async () => {
@@ -42,11 +42,22 @@ function RoundHistoryTable() {
           );
           setRoundContract(roundContractInstance);
 
-          const history: Round[] = await roundContractInstance.methods
-            .getRoundHistory()
-            .call();
+          // Define a function to fetch data from the contract
+          const fetchData = async () => {
+            const history: Round[] = await roundContractInstance.methods
+              .getRoundHistory()
+              .call();
+            setRoundHistory(history);
+          };
 
-          setRoundHistory(history);
+          // Fetch data initially
+          fetchData();
+
+          // Fetch data every 3 seconds
+          const intervalId = setInterval(fetchData, 3000);
+
+          // Clean up the interval when the component unmounts
+          return () => clearInterval(intervalId);
         } catch (error) {
           console.error("Failed to connect to wallet:", error);
         }
