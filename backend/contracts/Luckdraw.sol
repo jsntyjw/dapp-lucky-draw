@@ -214,6 +214,10 @@ contract Luckdraw is
     // Request lucky draw random number
     function requestLuckyDrawRandomNumber() public {
         require(
+            currentRound.addressPool.length != 0,
+            "Current Round don't have participator"
+        );
+        require(
             currentRound.requestId == 0,
             "Already request random number to VRF"
         );
