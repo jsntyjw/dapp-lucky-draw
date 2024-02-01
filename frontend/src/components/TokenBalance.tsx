@@ -3,11 +3,11 @@ import detectEthereumProvider from "@metamask/detect-provider";
 import Web3 from "web3";
 
 // Import the ABI and contract address for the token contract
-import tokenAbi from "../../../backend/contracts/LukydrawERC20TokenOZ.json";
+import tokenAbi from "../abi/abi.json";
 import { TOKEN_CONTRACT_ADDRESS } from "../config";
 
 // Import the ABI and contract address for the contract with getMinDepositToken function
-import roundContractAbi from "../../../backend/contracts/Luckdraw.json";
+import roundContractAbi from "../abi/Luckdraw.json";
 import { CONTRACT_ADDRESS } from "../config";
 
 interface MyNavbarProps {

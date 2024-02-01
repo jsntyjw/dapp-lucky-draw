@@ -3,7 +3,7 @@ import Web3 from "web3";
 
 import detectEthereumProvider from "@metamask/detect-provider";
 
-import abi from "../../../backend/contracts/Luckdraw.json";
+import abi from "../abi/Luckdraw.json";
 import { CONTRACT_ADDRESS, ADMIN_WALLET_ADDRESS } from "../config";
 
 const NewLuckyDraw: React.FC<{ onClose: () => void }> = ({ onClose }) => {

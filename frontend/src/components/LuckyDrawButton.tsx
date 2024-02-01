@@ -5,7 +5,7 @@ import detectEthereumProvider from "@metamask/detect-provider";
 import Web3 from "web3";
 
 // Import the ABI and contract address
-import roundContractAbi from "../../../backend/contracts/Luckdraw.json";
+import roundContractAbi from "../abi/Luckdraw.json";
 import { CONTRACT_ADDRESS, ADMIN_WALLET_ADDRESS } from "../config";
 import Alert from "./Alert";
 

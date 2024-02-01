@@ -3,7 +3,7 @@ import Web3 from "web3";
 import detectEthereumProvider from "@metamask/detect-provider";
 import ReactPaginate from "react-paginate";
 
-import roundContractAbi from "../../../backend/contracts/Luckdraw.json";
+import roundContractAbi from "../abi/Luckdraw.json";
 import { CONTRACT_ADDRESS } from "../config";
 
 interface Round {

@@ -4,8 +4,8 @@ import detectEthereumProvider from "@metamask/detect-provider";
 import Web3 from "web3";
 
 // Import the ABI and contract address
-import roundContractAbi from "../../../backend/contracts/Luckdraw.json";
-import tokenAbi from "../../../backend/contracts/LukydrawERC20TokenOZ.json";
+import roundContractAbi from "../abi/Luckdraw.json";
+import tokenAbi from "../abi/abi.json";
 
 import {
   TOKEN_CONTRACT_ADDRESS,
